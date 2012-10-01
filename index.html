@@ -1,1 +1,118 @@
-My GitHub Page
+<!DOCTYPE html>
+
+<!--[if lt IE 7]> <html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+
+    <title>Dribbblin' - Elegant Dribbble Viewer</title>
+    <meta name="author" content="Bharani Muthukumaraswamy <bharani91@gmail.com>">
+
+    <link rel="stylesheet" href="public/style/reset.css" media="screen, projection">
+    <link rel="stylesheet" href="public/style/app.css" media="screen, projection">
+
+    <script src="public/js/vendor/modernizr-1.6.min.js"></script>
+    <script src="public/js/vendor/jquery-1.5.1.min.js"></script>
+    <script src="public/js/vendor/underscore.js"></script>
+    <script src="public/js/vendor/backbone.js"></script>
+    <script src="public/js/app.js"></script>
+    
+    <!-- Templates -->
+
+    <script type="text/template" id="shot_template">
+      <a href='#shot/<%= id %>' class="shot_link">
+        <img src='<%= image_teaser_url %>' alt='<%= title %>' />
+        <h3><%= title %></h3>
+        <a href='#player/<%= player.username %>'><img src='<%= player.avatar_url %>'><%= player['name'] %></a>
+        <ul class='meta'>
+          <li>Comments: <%= comments_count %></li>
+          <li>Likes: <%= likes_count %></li>
+        </ul>
+      </a>
+    </script>
+
+    <script type="text/template" id="sidebar_header_template">
+      <header>
+        <% _.each(link_list, function(link) { %>
+          <a href='<%= link %>' title='<%= link %>' class='<%= link %>'><%= link %></a>
+        <% }) %>
+      </header>
+    </script>
+
+    <script type="text/template" id="shot_detail_template">
+      <img src='<%= image_url %>' alt='<%= title %>' />
+      <ul class="player_details">
+        <li><img src='<%= player.avatar_url %>'></li>
+        <li><%= player.name %></li>
+        <li>Shots: <%= player.shots_count %></li>
+        <li>Followers: <%= player.followers_count %></li>
+        <li>Following: <%= player.following_count %></li>
+        <% if (player.website_url) { %>
+          <li><%= player.website_url %></li>
+        <% } %>
+
+        <li>Location: <%= player.location %></li>
+
+      </ul>
+    </script>
+
+    <script type="text/template" id="shot_comment_template">
+      <li class="comment">
+        <strong><%= player.name %></strong> - <%= body %>
+      </li>
+    </script>
+
+
+  </head>
+
+  <body>
+    
+    <header id="header">
+      <h1>Dribbblin'</h1>
+    </header>
+
+
+    <article id="article">
+      <div class="sidebar">
+        <header>
+          <a href="#" title="Popular" class="popular">Popular</a>
+          <a href="#everyone" title="Latest" class="everyone">Everyone</a>
+          <a href="#debut" title="Best" class="debut">Debut</a>
+        </header><!--sidebar header-->
+
+        <div class="post_list_container"></div>
+          
+
+        <footer>
+          <button class="refresh">Refresh</button>
+        </footer>
+      </div><!--sidebar-->
+
+      <div class="main"></div><!--main_viewport-->
+    </article>
+
+    <script>
+    jQuery(document).ready(function($) {
+      $("#article, .main, .sidebar, .post_list").height($(document).height() - 50);
+
+
+      $(".refresh").live("click", function()  {
+        window.app.initialize();
+        app.navigate("", true);
+      });
+
+      $(".item a.shot_link").live("click", function() {
+          $(".item.active").removeClass("active");
+          $(this).parent().addClass("active");
+          $(".main").html($("<div/>", {id: "loading", text: "loading..."}));
+      });
+
+    });
+    
+    </script>
+
+  </body>
+</html>
